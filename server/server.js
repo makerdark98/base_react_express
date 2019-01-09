@@ -7,6 +7,11 @@ const bodyParser = require('body-parser');
 /* app is rest api server */
 const app = express();
 
+/* sequelize migration */
+const { sequelize } = require('../models');
+
+sequelize.sync();
+
 /* !!NOTICE!! When this project is deployed, configure system variable PORT */
 const PORT = process.env.PORT || 4000;
 
