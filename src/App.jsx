@@ -1,7 +1,10 @@
 /* eslint-env browser */
 import React from 'react';
+import { Button } from 'react-bootstrap';
+
 import logo from './logo.svg';
 import './App.css';
+
 
 const App = () => (
   <div className="App">
@@ -20,6 +23,7 @@ const App = () => (
       >
         Learn React
       </a>
+      <Button variant="primary">Test Button</Button>
     </header>
   </div>
 );
