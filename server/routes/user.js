@@ -20,9 +20,7 @@ router.post("/signup", function(req, res){
     if(err){
       req.flash("user", req.body);
       req.flash("errors", util.parseError(err));
-      return res.redirect("/users/new");
     }
-    res.redirect("/users");
   });
 });
 
@@ -47,8 +45,18 @@ router.post("/login",
       req.flash("errors",errors);
     }
   },
-  passport.authenticate("local-login", {
+  passport.authenticate("local-login", function (err, user, info) {
+    if (err)
+        return next(err);
 
+    if (!user)
+        return res.status(401).json({message: info.message});
+
+    req.logIn(user, function(err) {
+        next(err)
+    });
+
+    res.json(req.user);
   }
 ));
 
