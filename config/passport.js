@@ -7,41 +7,44 @@ const User = db.user;
 
 const Console = console;
 
-Console.log('hihi');
-
 // serialize & deserialize User
+/* TODO: I don't know how to operate this function(serializeUser, deserializeuser).
+ * Plz Check this */
 passport.serializeUser((user, done) => {
-  Console.log(user);
   done(null, user.userID);
 });
 passport.deserializeUser((userID, done) => {
-  Console.log(userID);
   User.findOne({ userID }, (err, user) => {
     done(err, user);
   });
 });
 
-// local strategy
+/* TODO: encrypt password */
 passport.use('local',
   new LocalStrategy({
+    /* Field Data property name must be usernameField, passwordField
+     * I think if you don't redirect response,
+     * don't need to set passReqToCallback true */
     usernameField: 'userID',
     passwordField: 'password',
-    passReqToCallback: true,
+    passReqToCallback: false,
   }, (userID, password, done) => {
-    // Console.log(res);
-    Console.log(userID);
+    /* search User record */
     User.findOne({
       where: { userID },
-    })
-      .then((err, user) => {
-        if (err) return done(err);
-        if (user && user.authenticate(password)) {
-          return done(null, user);
-        }
-        // res.send({ userID });
-        // res.send({ errors: 'Incorrect userID or password' });
-        return done(null, false);
-      });
+    }).then((user) => {
+      Console.log(user);
+      // TODO : encrypte password compare
+      if (user && user.password === password) {
+        /* if matched data exists */
+        done(null, user);
+      } else {
+        /* any record doesn't exists */
+        done(null, false);
+      }
+    }).catch((err) => {
+      throw err;
+    });
   }));
 
 module.exports = passport;

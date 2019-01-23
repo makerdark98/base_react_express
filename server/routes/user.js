@@ -5,38 +5,30 @@ const db = require('../../models/index');
 const User = db.user;
 const router = express.Router();
 
-const Console = console;
-// Post Login
-router.post('/login', (req, res, next) => {
-  const errors = {};
-  let isValid = true;
-
-  if (!req.body.user.userID) {
-    isValid = false;
-    errors.userID = 'userID is required!';
-  }
-  if (!req.body.user.password) {
-    isValid = false;
-    errors.password = 'Password is required!';
-  }
+router.post('/login', (req, res) => {
+  const callbackAuth = (err, user) => {
+    /* err : error */
+    /* !user : does not match user */
+    /* If you want to specify this case uncomment under comment */
+    // res.send({ return: 'fail', errors: 'User is not exist' });
+    try {
+      if (err || !user) throw (err || !user);
+      res.send({ return: 'success' });
+    } catch (error) {
+      res.send({ return: error });
+    }
+  };
+  /* set userID and password into body
+   * because passport interface */
   req.body.userID = req.body.user.userID;
   req.body.password = req.body.user.password;
-  if (!isValid) {
-    res.send({ return: 'fail', errors });
+
+  if (!req.body.user.userID || !req.body.user.password) {
+    res.send({ return: 'Error : does not complete form' });
+  } else {
+    const runAuth = passport.authenticate('local', callbackAuth);
+    runAuth(req);
   }
-  Console.log(req.body.user);
-  passport.authenticate('local', (err, user, info) => {
-    Console.log(err);
-    if (err) { return next(err); }
-    Console.log(user);
-    Console.log(info);
-    if (!user) { return res.send({ return: 'fail', errors: 'User is not exist' }); }
-    req.logIn(user, () => {
-      if (err) { return next(err); }
-      return res.send({ return: 'success' });
-    });
-    return res.send({ return: 'success' });
-  })(req, res, next);
 });
 
 // Logout
