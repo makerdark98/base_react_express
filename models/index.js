@@ -28,6 +28,11 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
+
+db.user.hasOne(db.verification, {
+  as: 'verification',
+});
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
