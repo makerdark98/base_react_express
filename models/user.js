@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => sequelize.define('user', {
   userID: {
     type: DataTypes.STRING(20),
@@ -24,7 +26,14 @@ module.exports = (sequelize, DataTypes) => sequelize.define('user', {
     allowNull: false,
     unique: true,
   },
-  
 }, {
   timestamps: true,
+  instanceMethods: {
+    generateHash(password) {
+      return bcrypt.hash(password, bcrypt.genSaltSync(8));
+    },
+    validPassword(password) {
+      return bcrypt.compare(password, this.password);
+    },
+  },
 });
