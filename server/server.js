@@ -32,12 +32,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const ping = require('./routes/ping');
-const key = require('./routes/key');
 const user = require('./routes/user');
+const auth = require('./routes/auth');
 
 app.use('/api/ping', ping);
-app.use('/api/key', key);
 app.use('/api/user', user);
+app.use('/api/auth', auth);
 
 app.use((req, res, next) => {
   next(createError(404));
