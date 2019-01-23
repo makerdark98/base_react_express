@@ -28,6 +28,15 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
+db.verification.belongsTo(db.user);
+/*
+db.user.hasOne(db.verification, {
+  foriegnKey: 'userID',
+  as: 'User',
+  constraints: false,
+});
+*/
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
