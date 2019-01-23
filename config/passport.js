@@ -5,32 +5,41 @@ const db = require('../models/index');
 
 const User = db.user;
 
+const Console = console;
+
+Console.log('hihi');
+
 // serialize & deserialize User
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  Console.log(user);
+  done(null, user.userID);
 });
-passport.deserializeUser((id, done) => {
-  User.findOne({ _id: id }, (err, user) => {
+passport.deserializeUser((userID, done) => {
+  Console.log(userID);
+  User.findOne({ userID }, (err, user) => {
     done(err, user);
   });
 });
 
 // local strategy
-passport.use('local-login',
+passport.use('local',
   new LocalStrategy({
-    userIDField: 'userID',
+    usernameField: 'userID',
     passwordField: 'password',
     passReqToCallback: true,
-  }, (req, userID, password, done) => {
-    User.findOne({ userID })
-      .select({ password: 1 })
-      .exec((err, user) => {
+  }, (userID, password, done) => {
+    // Console.log(res);
+    Console.log(userID);
+    User.findOne({
+      where: { userID },
+    })
+      .then((err, user) => {
         if (err) return done(err);
         if (user && user.authenticate(password)) {
           return done(null, user);
         }
-        req.flash('userID', userID);
-        req.flash('errors', { login: 'Incorrect userID or password' });
+        // res.send({ userID });
+        // res.send({ errors: 'Incorrect userID or password' });
         return done(null, false);
       });
   }));

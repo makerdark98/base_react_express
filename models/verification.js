@@ -1,4 +1,4 @@
-const User = require('./user.js');
+// const User = require('./user.js');
 
 module.exports = (sequelize, DataTypes) => {
   const Verification = sequelize.define('verification', {
@@ -10,10 +10,12 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     timestamps: true,
   });
+  /*
   Verification.hasOne(User, {
     foriegnKey: 'userID',
     constraints: false,
   });
+  */
 
   return Verification;
 };
