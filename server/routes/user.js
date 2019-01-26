@@ -1,6 +1,10 @@
 const express = require('express');
+const random = require('random-key-generator');
 const passport = require('../../config/passport');
 const db = require('../../models/index');
+const smtpTransport = require('../../config/mailing');
+
+const Console = console;
 
 const User = db.user;
 const router = express.Router();
@@ -53,13 +57,26 @@ router.get('/logout', (req, res) => {
 
 // create
 router.post('/signup', (req, res) => {
-  User.create(req.body, (err) => {
-    if (err) {
-      req.flash('user', req.body);
-      res.send({ return: 'false', errors: 'Sign up is not working' });
-    }
-    res.send({ return: 'success' });
-  });
+  const token = random(10);
+  User.create(req.body.user)
+    .then((user) => {
+      user.createVerification({ token });
+    }).then(() => {
+      smtpTransport.sendMail({
+        from: 'test',
+        to: req.body.user.email,
+        subject: 'subject',
+        text: token,
+      }, (err) => {
+        if (err) throw err;
+        res.send({ return: 'success' });
+      });
+    }).catch((err) => {
+      if (err) {
+        Console.log(err);
+        res.send({ return: 'false', errors: 'Sign up is not working' });
+      }
+    });
 });
 
 module.exports = router;
