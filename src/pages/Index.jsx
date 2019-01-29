@@ -8,7 +8,7 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null,
+      files: null,
     };
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -17,13 +17,18 @@ export default class Index extends Component {
   onFormSubmit(e) {
     e.preventDefault();
     const { state } = this;
+    const { files } = state;
     const formData = new FormData();
-    formData.append('myImage', state.file);
+    const filearray = Object.values(files);
+    filearray.forEach((file) => {
+      formData.append('myImage', file);
+    });
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
     };
+
     axios.post('/api/multer/upload', formData, config)
       .then((response) => {
         Console.log('The file is successfully uploaded');
@@ -34,14 +39,14 @@ export default class Index extends Component {
   }
 
   onChange(e) {
-    this.setState({ file: e.target.files[0] });
+    this.setState({ files: e.target.files });
   }
 
   render() {
     return (
       <form onSubmit={this.onFormSubmit}>
         <h1>File Upload</h1>
-        <input type="file" name="myImage" onChange={this.onChange} />
+        <input type="file" multiple name="myImage" onChange={this.onChange} />
         <button type="submit">Upload</button>
       </form>
     );
