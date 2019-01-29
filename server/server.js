@@ -35,10 +35,12 @@ app.use(passport.session());
 const ping = require('./routes/ping');
 const user = require('./routes/user');
 const auth = require('./routes/auth');
+const multer = require('./routes/multer');
 
 app.use('/api/ping', ping);
 app.use('/api/user', user);
 app.use('/api/auth', auth);
+app.use('/api/mutler', multer);
 
 app.use((req, res, next) => {
   next(createError(404));
