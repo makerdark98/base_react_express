@@ -5,9 +5,12 @@ const multer = require('multer');
 const router = express.Router();
 
 const Console = console;
+const dest = path.join(__dirname, '../../public/uploads');
 
 const storage = multer.diskStorage({
-  destination: '../public/uploads/',
+  destination: (req, file, cb) => {
+    cb(null, dest);
+  },
   filename: (req, file, cb) => {
     const prefix = 'IMAGE-';
     const date = Date.now();
@@ -20,8 +23,7 @@ const upload = multer({
   storage,
 }).single('myImage');
 
-router.post('/upload', (req, res) => {
-  Console.log('hehehe');
+router.post('/upload', upload, (req, res) => {
   upload(req, res, (err) => {
     if (err) {
       Console.log(err);
