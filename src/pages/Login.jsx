@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import history from '../history';
+
 const Console = console;
 
 export default class Login extends Component {
@@ -25,6 +27,11 @@ export default class Login extends Component {
       .then((res) => {
         Console.log(res);
         Console.log(res.data);
+        if (res.data.return === 'success') {
+          history.push('/index');
+        } else {
+          alert('THINKING AGAIN');
+        }
       });
   }
 
