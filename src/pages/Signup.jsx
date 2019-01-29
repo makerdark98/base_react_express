@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import history from '../history';
+
 const Console = console;
 
 export default class Signup extends Component {
@@ -20,7 +22,6 @@ export default class Signup extends Component {
 
   onClickSignup() {
     const { state } = this;
-    Console.log({ state });
     const user = {
       userID: state.userID,
       password: state.password,
@@ -28,11 +29,15 @@ export default class Signup extends Component {
       nickname: state.nickname,
       phone: state.phone,
     };
-    Console.log(user);
     axios.post('/api/user/signup', { user })
       .then((res) => {
         Console.log(res);
         Console.log(res.data);
+        if (res.data.return === 'success') {
+          history.push('/');
+        } else {
+          alert('THINKING AGAIN');
+        }
       });
   }
 
@@ -57,7 +62,7 @@ export default class Signup extends Component {
             <input type="email" className="form-control" name="email" value={state.email} placeholder="E-mail" required="" onChange={this.handleChange} />
             <input type="text" className="form-control" name="nickname" value={state.nickname} placeholder="nickname" required="" onChange={this.handleChange} />
             <input type="text" className="form-control" name="phone" value={state.phone} placeholder="phone" required="" onChange={this.handleChange} />
-            <button className="btn btn-lg btn-primary btn-block" type="button" onClick={this.onClickSignup}> Sing Up</button>
+            <button className="btn btn-lg btn-primary btn-block" type="button" onClick={this.onClickSignup}> Sign Up</button>
           </form>
         </div>
       </div>
