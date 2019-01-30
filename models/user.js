@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => sequelize.define('user', {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -19,12 +18,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('user', {
   nickname: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   phone: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   status: {
     type: DataTypes.STRING,
