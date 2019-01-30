@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => sequelize.define('user', {
     allowNull: false,
     unique: true,
   },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   timestamps: true,
   instanceMethods: {

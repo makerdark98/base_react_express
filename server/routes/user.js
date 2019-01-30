@@ -45,15 +45,17 @@ router.get('/logout', (req, res) => {
 router.post('/signup', (req, res) => {
   const token = random(10);
   res.setHeader('Content-Type', 'text/json');
+  req.body.user.status = 'unauth';
   User.create(req.body.user)
     .then((user) => {
       user.createVerification({ token });
     }).then(() => {
+      const serverURL = 'http://localhost:3000';
       smtpTransport.sendMail({
         from: 'test',
         to: req.body.user.email,
         subject: 'subject',
-        text: token,
+        html: `<a>${serverURL}/auth/${token}</a>`,
       }, (err) => {
         if (err) {
           Console.log(err);

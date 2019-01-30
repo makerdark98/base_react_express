@@ -6,19 +6,29 @@ const Verification = db.verification;
 
 const Console = console;
 
-router.get('/', (req, res) => {
+router.post('/', (req, res) => {
+  res.setHeader('Content-Type', 'text/json');
   Verification.findOne({
     where: {
-      token: req.query.token,
+      token: req.body.token,
     },
   }).then((match) => {
-    match.getUser()
-      .then((user) => {
-        Console.log(user);
-      });
+    if (match) {
+      match.getUser()
+        .then((user) => {
+          user.update({ status: 'normal' });
+          res.write(JSON.stringify({ return: true }));
+          res.end();
+        });
+    } else {
+      res.write(JSON.stringify({ return: false }));
+      res.end();
+    }
+  }).catch((err) => {
+    Console.log(err);
+    res.write(JSON.stringify({ return: false }));
+    res.end();
   });
-
-  res.send(req.query.token);
 });
 
 module.exports = router;
